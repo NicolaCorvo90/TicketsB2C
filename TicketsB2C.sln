@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketsB2C", "TicketsB2C.csproj", "{AF36F59B-B94E-4496-8626-780D8CDF6F2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketsB2CTest", "TicketsB2CTest\TicketsB2CTest.csproj", "{C9C04EA0-41D5-47CB-8D4A-D13822E2EF42}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF36F59B-B94E-4496-8626-780D8CDF6F2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF36F59B-B94E-4496-8626-780D8CDF6F2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF36F59B-B94E-4496-8626-780D8CDF6F2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF36F59B-B94E-4496-8626-780D8CDF6F2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9C04EA0-41D5-47CB-8D4A-D13822E2EF42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9C04EA0-41D5-47CB-8D4A-D13822E2EF42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9C04EA0-41D5-47CB-8D4A-D13822E2EF42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9C04EA0-41D5-47CB-8D4A-D13822E2EF42}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
