@@ -4,14 +4,21 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <InvariantGlobalization>true</InvariantGlobalization>
+        <InvariantGlobalization>false</InvariantGlobalization>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DotNetEnv" Version="3.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.13" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
         <PackageReference Include="Microsoft.TestPlatform" Version="17.13.0" />
         <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="17.14.0-preview-25107-01" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -19,5 +26,9 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
         <PackageReference Include="xunit" Version="2.9.3" />
     </ItemGroup>
+
+    <Target Name="PreTest" BeforeTargets="Test">
+        <Exec Command="set ASPNETCORE_ENVIRONMENT=Testing &amp;&amp; dotnet ef database update" />
+    </Target>
 
 </Project>
