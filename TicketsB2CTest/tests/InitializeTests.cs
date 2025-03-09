@@ -52,6 +52,14 @@ public class InitializeTests
         });
         _context.Tickets.Add(new Tickets
         {
+            DepartureCity = "Roma",
+            DestinationCity = "Napoli",
+            Type = "Train",
+            PriceInCent = 2000,
+            CarrierId = trenitaliaCarrier.Id
+        });
+        _context.Tickets.Add(new Tickets
+        {
             DepartureCity = "Milano",
             DestinationCity = "Torino",
             Type = "Bus",

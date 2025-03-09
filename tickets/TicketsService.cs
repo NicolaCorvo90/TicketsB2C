@@ -1,4 +1,5 @@
 using TicketsB2C.carriers;
+using TicketsB2C.tickets.dto;
 using TicketsB2C.tickets.readmodel;
 
 namespace TicketsB2C.tickets;
@@ -21,6 +22,14 @@ public class TicketsService(ITicketsRepository ticketsRepository, ICarriersRepos
         
         return ticketsRepository.GetTickets()
             .Where(ticket => ticket.CarrierId == carrierId)
+            .Select(MapToReadModel)
+            .ToList();
+    }
+    
+    public List<TicketsReadModel> SearchTickets(TicketSearchDto ticketSearchDto)
+    {
+        return ticketsRepository.GetTickets()
+            .Where(ticket => ticket.DepartureCity == ticketSearchDto.DepartureCity && ticket.DestinationCity == ticketSearchDto.DestinationCity)
             .Select(MapToReadModel)
             .ToList();
     }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TicketsB2C.tickets.dto;
 using TicketsB2C.tickets.readmodel;
 
 namespace TicketsB2C.tickets;
@@ -17,5 +18,16 @@ public class TicketsController(ITicketsService ticketsService): ControllerBase
     public List<TicketsReadModel> GetTicketsByCarrier(int carrierId)
     {
         return ticketsService.GetTicketsByCarrier(carrierId);
+    }
+    
+    [HttpGet("SearchTickets")]
+    public ActionResult<List<TicketsReadModel>> SearchTickets([FromQuery] TicketSearchDto ticketSearchDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        return ticketsService.SearchTickets(ticketSearchDto);
     }
 }
