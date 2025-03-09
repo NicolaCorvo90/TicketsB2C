@@ -89,7 +89,7 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
     }
     
     [Fact]
-    public async Task GSearchTicketsByValidCities()
+    public async Task SearchTicketsByValidCities()
     {
         var response = await _client.GetAsync("/tickets/SearchTickets?DepartureCity=Roma&DestinationCity=Napoli");
         
