@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TicketsB2C.carriers;
 using TicketsB2C.db;
 using TicketsB2C.tickets;
 
@@ -58,5 +59,7 @@ public class Program
     {
         builder.Services.AddScoped<ITicketsRepository, TicketsRepository>();
         builder.Services.AddScoped<ITicketsService, TicketsService>();
+        
+        builder.Services.AddScoped<ICarriersRepository, CarriersRepository>();
     }
 }

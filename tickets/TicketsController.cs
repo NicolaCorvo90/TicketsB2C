@@ -12,4 +12,10 @@ public class TicketsController(ITicketsService ticketsService): ControllerBase
     {
         return ticketsService.GetTickets();
     }
+    
+    [HttpGet("GetTicketsByCarrier/{carrierId}")]
+    public List<TicketsReadModel> GetTicketsByCarrier(int carrierId)
+    {
+        return ticketsService.GetTicketsByCarrier(carrierId);
+    }
 }
