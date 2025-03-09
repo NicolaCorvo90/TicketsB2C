@@ -9,4 +9,6 @@ public interface ITicketsService
     public List<TicketsReadModel> GetTicketsByCarrier(int carrierId);
     
     public List<TicketsReadModel> SearchTickets(TicketSearchDto ticketSearchDto);
+    
+    public BuyTicketReadModel BuyTicket(BuyTicketDto buyTicketDto);
 }

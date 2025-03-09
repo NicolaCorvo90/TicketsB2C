@@ -12,4 +12,9 @@ public class TicketsRepository(MsSqlDbContext context): ITicketsRepository
             .Include(ticket => ticket.Carrier)
             .ToList();
     }
+
+    public Tickets GetTicketById(int id)
+    {
+        return context.Tickets.First(ticket => ticket.Id == id);
+    }
 }

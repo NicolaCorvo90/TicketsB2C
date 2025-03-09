@@ -33,6 +33,20 @@ public class TicketsService(ITicketsRepository ticketsRepository, ICarriersRepos
             .Select(MapToReadModel)
             .ToList();
     }
+
+    public BuyTicketReadModel BuyTicket(BuyTicketDto buyTicketDto)
+    {
+        Tickets ticket = ticketsRepository.GetTicketById(buyTicketDto.TicketId);
+        
+        if(ticket == null)
+        {
+            throw new BadHttpRequestException("Ticket not found.");
+        }
+        
+        int totalInCent = ticket.PriceInCent * buyTicketDto.Quantity;
+        
+        return new BuyTicketReadModel { TotalInCent = totalInCent };
+    }
     
     private TicketsReadModel MapToReadModel(Tickets ticket)
     {

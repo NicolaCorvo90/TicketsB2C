@@ -30,4 +30,15 @@ public class TicketsController(ITicketsService ticketsService): ControllerBase
 
         return ticketsService.SearchTickets(ticketSearchDto);
     }
+    
+    [HttpPost("BuyTicket")]
+    public ActionResult<BuyTicketReadModel> BuyTicket([FromBody] BuyTicketDto buyTicketDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        return ticketsService.BuyTicket(buyTicketDto);
+    }
 }

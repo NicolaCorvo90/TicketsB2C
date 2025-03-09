@@ -1,7 +1,9 @@
 using System.Net;
+using System.Text;
 using Newtonsoft.Json;
 using TicketsB2C;
 using TicketsB2C.tickets;
+using TicketsB2C.tickets.readmodel;
 
 namespace TicketsB2CTest.tests.tickets;
 
@@ -114,5 +116,58 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
             Assert.True(ticket.Carrier.Id > 0, "Carrier Id should be a positive number.");
             Assert.False(string.IsNullOrEmpty(ticket.Carrier.Name), "Carrier Name should not be null or empty.");
         }
+    }
+    
+    [Fact]
+    public async Task BuyTicketByInvalidParams()
+    {
+        var json = JsonConvert.SerializeObject(new
+        {
+            TicketId = 1
+        });
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+    
+    [Fact]
+    public async Task BuyTicketWithQuantity1()
+    {
+        var json = JsonConvert.SerializeObject(new
+        {
+            TicketId = 1,
+            quantity = 1,
+        });
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        response.EnsureSuccessStatusCode();
+        
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<BuyTicketReadModel>(responseString);
+
+        Assert.NotNull(result);
+        Assert.Equal(1500, result.TotalInCent);
+    }
+    
+    [Fact]
+    public async Task BuyTicketWithQuantity4()
+    {
+        var json = JsonConvert.SerializeObject(new
+        {
+            TicketId = 4,
+            quantity = 4,
+        });
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        response.EnsureSuccessStatusCode();
+        
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<BuyTicketReadModel>(responseString);
+
+        Assert.NotNull(result);
+        Assert.Equal(5000, result.TotalInCent);
     }
 }
