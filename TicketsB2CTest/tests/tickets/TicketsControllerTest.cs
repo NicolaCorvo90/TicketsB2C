@@ -1,12 +1,15 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 using TicketsB2C;
 using TicketsB2C.tickets;
 using TicketsB2C.tickets.readmodel;
+using Microsoft.AspNetCore.Http;
 
 namespace TicketsB2CTest.tests.tickets;
 
+[Collection("Test collection")]
 public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
 {
     private readonly HttpClient _client;
@@ -14,8 +17,6 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
     public TicketsControllerTest(ApiWebApplicationFactory factory)
     {
         _client = factory.CreateClient();
-
-        new InitializeTests();
     }
     
     [Fact]
@@ -49,9 +50,10 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
     [Fact]
     public async Task GetTicketByInvalidCarrier()
     {
-        var response = await _client.GetAsync("/tickets/GetTicketsByCarrier/9");
-        
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        await Assert.ThrowsAsync<BadHttpRequestException>(async () =>
+        {
+            await _client.GetAsync("/tickets/GetTicketsByCarrier/9");
+        });
     }
     
     [Fact]
@@ -119,7 +121,7 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
     }
     
     [Fact]
-    public async Task BuyTicketByInvalidParams()
+    public async Task BuyTicketWithoutAuthentication()
     {
         var json = JsonConvert.SerializeObject(new
         {
@@ -127,6 +129,28 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
         });
         var content = new StringContent(json, Encoding.UTF8, "application/json");
         var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+    
+    [Fact]
+    public async Task BuyTicketByInvalidParams()
+    {
+        var json = JsonConvert.SerializeObject(new
+        {
+            TicketId = 1
+        });
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var jwtToken = await Login();
+        
+        var request = new HttpRequestMessage(HttpMethod.Post, "/tickets/BuyTicket")
+        {
+            Content = content
+        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+        var response = await _client.SendAsync(request);
         
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -140,7 +164,16 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
             quantity = 1,
         });
         var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        var jwtToken = await Login();
+        
+        var request = new HttpRequestMessage(HttpMethod.Post, "/tickets/BuyTicket")
+        {
+            Content = content
+        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+        var response = await _client.SendAsync(request);
         
         response.EnsureSuccessStatusCode();
         
@@ -160,7 +193,16 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
             quantity = 4,
         });
         var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        var jwtToken = await Login();
+        
+        var request = new HttpRequestMessage(HttpMethod.Post, "/tickets/BuyTicket")
+        {
+            Content = content
+        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+        var response = await _client.SendAsync(request);
         
         response.EnsureSuccessStatusCode();
         
@@ -180,7 +222,16 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
             quantity = 10,
         });
         var content = new StringContent(json, Encoding.UTF8, "application/json");
-        var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        var jwtToken = await Login();
+        
+        var request = new HttpRequestMessage(HttpMethod.Post, "/tickets/BuyTicket")
+        {
+            Content = content
+        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
+
+        var response = await _client.SendAsync(request);
         
         response.EnsureSuccessStatusCode();
         
@@ -189,5 +240,18 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
 
         Assert.NotNull(result);
         Assert.Equal(22050, result.TotalInCent);
+    }
+
+    private async Task<string> Login()
+    {
+        var json = JsonConvert.SerializeObject(new
+        {
+            Email = "test@test.com",
+            Password = "test"
+        });
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync("/users/login", content);
+        
+        return await response.Content.ReadAsStringAsync();
     }
 }

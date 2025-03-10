@@ -2,13 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using TicketsB2C.carriers;
 using TicketsB2C.db;
 using TicketsB2C.tickets;
+using TicketsB2C.users;
 
 namespace TicketsB2CTest.tests;
 
-public class InitializeTests
+public class InitializeTests: IDisposable
 {
     private readonly MsSqlDbContext _context;
-    
+
     public InitializeTests()
     {
         DotNetEnv.Env.Load(Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName,
@@ -18,16 +19,28 @@ public class InitializeTests
         var optionsBuilder = new DbContextOptionsBuilder<MsSqlDbContext>();
         optionsBuilder.UseSqlServer(connectionString);
         _context = new MsSqlDbContext(optionsBuilder.Options);
-        
+
         CleanDb();
+        CreateUsers();
         CreateCarriers();
         CreateTickets();
+    }
+
+    public void Dispose()
+    {
+        
     }
 
     private void CleanDb()
     {
         _context.Database.EnsureDeleted();
         _context.Database.EnsureCreated();
+    }
+    
+    private void CreateUsers()
+    {
+        _context.Users.Add(new Users { Email = "test@test.com", Password = BCrypt.Net.BCrypt.HashPassword("test") });
+        _context.SaveChanges();
     }
     
     private void CreateCarriers()

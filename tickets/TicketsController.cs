@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketsB2C.tickets.dto;
 using TicketsB2C.tickets.readmodel;
@@ -31,6 +32,7 @@ public class TicketsController(ITicketsService ticketsService): ControllerBase
         return ticketsService.SearchTickets(ticketSearchDto);
     }
     
+    [Authorize]
     [HttpPost("BuyTicket")]
     public ActionResult<BuyTicketReadModel> BuyTicket([FromBody] BuyTicketDto buyTicketDto)
     {
