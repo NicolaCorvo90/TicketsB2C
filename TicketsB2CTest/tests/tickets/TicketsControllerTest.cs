@@ -148,7 +148,7 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
         var result = JsonConvert.DeserializeObject<BuyTicketReadModel>(responseString);
 
         Assert.NotNull(result);
-        Assert.Equal(1500, result.TotalInCent);
+        Assert.Equal(1455, result.TotalInCent);
     }
     
     [Fact]
@@ -168,6 +168,26 @@ public class TicketsControllerTest: IClassFixture<ApiWebApplicationFactory>
         var result = JsonConvert.DeserializeObject<BuyTicketReadModel>(responseString);
 
         Assert.NotNull(result);
-        Assert.Equal(5000, result.TotalInCent);
+        Assert.Equal(4850, result.TotalInCent);
+    }
+    
+    [Fact]
+    public async Task BuyTicketWithQuantity10()
+    {
+        var json = JsonConvert.SerializeObject(new
+        {
+            TicketId = 5,
+            quantity = 10,
+        });
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await _client.PostAsync("/tickets/BuyTicket", content);
+        
+        response.EnsureSuccessStatusCode();
+        
+        var responseString = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<BuyTicketReadModel>(responseString);
+
+        Assert.NotNull(result);
+        Assert.Equal(22050, result.TotalInCent);
     }
 }

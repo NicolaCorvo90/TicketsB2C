@@ -1,10 +1,12 @@
 using TicketsB2C.carriers;
+using TicketsB2C.discounts;
+using TicketsB2C.discounts.dto;
 using TicketsB2C.tickets.dto;
 using TicketsB2C.tickets.readmodel;
 
 namespace TicketsB2C.tickets;
 
-public class TicketsService(ITicketsRepository ticketsRepository, ICarriersRepository carriersRepository): ITicketsService
+public class TicketsService(ITicketsRepository ticketsRepository, ICarriersRepository carriersRepository, IDiscountService discountService): ITicketsService
 {
     public List<TicketsReadModel> GetTickets()
     {
@@ -44,6 +46,12 @@ public class TicketsService(ITicketsRepository ticketsRepository, ICarriersRepos
         }
         
         int totalInCent = ticket.PriceInCent * buyTicketDto.Quantity;
+        totalInCent = discountService.calculateDiscount(new CalculateDiscountDto
+        {
+            TotalInCent = totalInCent,
+            Quantity = buyTicketDto.Quantity,
+            Type = ticket.Type
+        });
         
         return new BuyTicketReadModel { TotalInCent = totalInCent };
     }
