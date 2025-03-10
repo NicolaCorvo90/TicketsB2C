@@ -2,6 +2,8 @@ TEST
 
 Run the following commands to test the project:
 
+docker compose up -d
+
 dotnet restore
 
 dotnet test
@@ -12,6 +14,8 @@ DEV
 Duplicate .env.local and rename to .env
 
 Run the following commands to start the project:
+
+docker compose up -d
 
 dotnet restore
 
